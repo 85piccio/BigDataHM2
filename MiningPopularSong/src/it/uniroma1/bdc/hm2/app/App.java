@@ -1,6 +1,10 @@
 package it.uniroma1.bdc.hm2.app;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 //import java.util.ArrayList;
 //import java.util.List;
 import java.util.Scanner;
@@ -36,9 +40,9 @@ public class App {
 		// for(int i=0; i < args.length; ++i) {
 		// try {
 		// if ("-m".equals(args[i])) {
-		conf.setInt("mapreduce.job.maps", 4);
+		conf.setInt("mapreduce.job.maps", 1);
 		// } else if ("-r".equals(args[i])) {
-		conf.setInt("mapreduce.job.reduces", 4);
+		conf.setInt("mapreduce.job.reduces", 1);
 		// } else {
 		// otherArgs.add(args[i]);
 		// }
@@ -67,19 +71,21 @@ public class App {
 
 		Job job = Job.getInstance(conf);
 		job.setJarByClass(App.class);
-		
-		MultipleInputs.addInputPath(job, input1, TextInputFormat.class, MyMapper.class);
-        MultipleInputs.addInputPath(job,input2, TextInputFormat.class, MyMapper2.class);
 
-//		FileInputFormat.setInputPaths(job, input1);
-//		job.setInputFormatClass(TextInputFormat.class);
-		job.setMapperClass(MyMapper.class);
+		MultipleInputs.addInputPath(job, input1, TextInputFormat.class,
+				MyMapper.class);
+		MultipleInputs.addInputPath(job, input2, TextInputFormat.class,
+				MyMapper2.class);
+
+		// FileInputFormat.setInputPaths(job, input1);
+		// job.setInputFormatClass(TextInputFormat.class);
+		// job.setMapperClass(MyMapper.class);
 
 		FileOutputFormat.setOutputPath(job, output);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(Text.class);
 
-		job.setCombinerClass(MyReducer.class);
+		// job.setCombinerClass(MyReducer.class);
 		job.setReducerClass(MyReducer.class);
 
 		job.waitForCompletion(true);
@@ -112,8 +118,10 @@ public class App {
 				String[] parts = scanner.next().split("\t");
 
 				if (parts.length > 2) {
-					if (parts[3].compareTo("") != 0)//ignore uid without country 
-						context.write(new Text(parts[0]/* UID */), new Text(parts[3]/* Country */));/* emit */
+					if (parts[3].compareTo("") != 0)// ignore uid without
+													// country
+						context.write(new Text(parts[0]/* UID */), new Text(
+								"#" + parts[3]/* Country */));/* emit */
 				}
 			}
 			scanner.close();
@@ -134,7 +142,9 @@ public class App {
 		}
 
 	}
-	public static class MyMapper2 extends Mapper<LongWritable, Text, Text, Text>{
+
+	public static class MyMapper2 extends
+			Mapper<LongWritable, Text, Text, Text> {
 
 		// private final static IntWritable one = new IntWritable(1);
 		// private Text word = new Text();
@@ -158,11 +168,10 @@ public class App {
 
 			while (scanner.hasNext()) {
 				String[] parts = scanner.next().split("\t");
-
-				if (parts.length > 2) {
-					if (parts[3].compareTo("") != 0)//ignore uid without country 
-						context.write(new Text(parts[0]/* UID */), new Text(parts[3]/* Country */));/* emit */
-				}
+				// if (parts.length == 5) {
+				context.write(new Text(parts[0]/* UID */),
+						new Text(parts[2]/* idtrack */));/* emit */
+				// }s
 			}
 			scanner.close();
 		}
@@ -180,8 +189,8 @@ public class App {
 			// TODO Auto-generated method stub
 			super.setup(context);
 		}
-		
-	} 
+
+	}
 
 	public static class MyReducer extends Reducer<Text, Text, Text, Text> {
 
@@ -196,8 +205,33 @@ public class App {
 		protected void reduce(Text key, Iterable<Text> values, Context context)
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
-			for (Text value : values)
-				context.write(key, value);
+			String country = "";
+			Map<String, Integer> songCount = new HashMap<>();
+			for (Text value : values) {
+				if (value.toString().contains("#")/* regex coountry */) {// value
+																		// =
+																		// country
+																		// TODO:
+																		// PERFORMANCE
+					country = value.toString();
+				} else {// Value = id track
+					if (songCount.containsKey(value.toString())) {
+						songCount.put(value.toString(), songCount.get(value.toString()) + 1);
+					} else {
+						songCount.put(value.toString(), 1);
+					}
+				}
+			}
+			System.out.println("#" + songCount.entrySet().size());
+			Iterator<Entry<String, Integer>> iterator = songCount.entrySet()
+					.iterator();
+			while (iterator.hasNext()) {
+				Entry<String, Integer> song = iterator.next();
+				context.write(key, new Text(country + "\t" + song.getKey()
+						+ "\t" + song.getValue()));
+				iterator.remove();
+			}
+
 		}
 
 		@Override
