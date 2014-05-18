@@ -117,11 +117,13 @@ public class App {
 			while (scanner.hasNext()) {
 				String[] parts = scanner.next().split("\t");
 
-				if (parts.length > 2) {
-					if (parts[3].compareTo("") != 0)// ignore uid without
-													// country
+				if (parts.length > 3) {
+					if (!parts[3].isEmpty()) {// ignore uid without
+												// country
+
 						context.write(new Text(parts[0]/* UID */), new Text(
 								"#" + parts[3]/* Country */));/* emit */
+					}
 				}
 			}
 			scanner.close();
@@ -169,8 +171,9 @@ public class App {
 			while (scanner.hasNext()) {
 				String[] parts = scanner.next().split("\t");
 				// if (parts.length == 5) {
-				context.write(new Text(parts[0]/* UID */),
-						new Text(parts[2]/* idtrack */));/* emit */
+				if (!parts[2].isEmpty())
+					context.write(new Text(parts[0]/* UID */), new Text(
+							parts[2]/* idtrack */));/* emit */
 				// }s
 			}
 			scanner.close();
@@ -216,20 +219,22 @@ public class App {
 					country = value.toString();
 				} else {// Value = id track
 					if (songCount.containsKey(value.toString())) {
-						songCount.put(value.toString(), songCount.get(value.toString()) + 1);
+						songCount.put(value.toString(),
+								songCount.get(value.toString()) + 1);
 					} else {
 						songCount.put(value.toString(), 1);
 					}
 				}
 			}
-			System.out.println("#" + songCount.entrySet().size());
-			Iterator<Entry<String, Integer>> iterator = songCount.entrySet()
-					.iterator();
-			while (iterator.hasNext()) {
-				Entry<String, Integer> song = iterator.next();
-				context.write(key, new Text(country + "\t" + song.getKey()
-						+ "\t" + song.getValue()));
-				iterator.remove();
+			if (country.compareTo("") != 0) {
+				Iterator<Entry<String, Integer>> iterator = songCount
+						.entrySet().iterator();
+				while (iterator.hasNext()) {
+					Entry<String, Integer> song = iterator.next();
+					context.write(key, new Text(country + "\t" + song.getKey()
+							+ "\t" + song.getValue()));
+					iterator.remove();
+				}
 			}
 
 		}
