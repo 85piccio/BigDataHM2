@@ -3,11 +3,14 @@ package it.uniroma1.bdc.hm2.app;
 import it.uniroma1.bdc.hm2.round1.mapper.MapperInputCountry;
 import it.uniroma1.bdc.hm2.round1.mapper.MapperInputTrack;
 import it.uniroma1.bdc.hm2.round1.reducer.ReducerJoint;
+import it.uniroma1.bdc.hm2.round2.mapper.MapRound2;
+import it.uniroma1.bdc.hm2.round2.reducer.ReducerRound2;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -55,26 +58,46 @@ public class App {
 		Path input1 = new Path("/in/input1.txt");// country
 		Path input2 = new Path("/in/input2.txt");// truck
 
-		Path output = new Path("/out");
+		Path output1 = new Path("/temp");
 
-		Job job = Job.getInstance(conf);
-		job.setJarByClass(App.class);
+		Job job1 = Job.getInstance(conf);
+		job1.setJarByClass(App.class);
 
-		MultipleInputs.addInputPath(job, input1, TextInputFormat.class, MapperInputCountry.class);
-		MultipleInputs.addInputPath(job, input2, TextInputFormat.class, MapperInputTrack.class);
+		MultipleInputs.addInputPath(job1, input1, TextInputFormat.class, MapperInputCountry.class);
+		MultipleInputs.addInputPath(job1, input2, TextInputFormat.class, MapperInputTrack.class);
 
 		// FileInputFormat.setInputPaths(job, input1);
 		// job.setInputFormatClass(TextInputFormat.class);
 		// job.setMapperClass(MyMapper.class);
 
-		FileOutputFormat.setOutputPath(job, output);
-		job.setOutputKeyClass(Text.class);
-		job.setOutputValueClass(Text.class);
+		FileOutputFormat.setOutputPath(job1, output1);
+		job1.setOutputKeyClass(Text.class);
+		job1.setOutputValueClass(Text.class);
 
 		// job.setCombinerClass(MyReducer.class);
-		job.setReducerClass(ReducerJoint.class);
+		job1.setReducerClass(ReducerJoint.class);
 
-		job.waitForCompletion(true);
+		job1.waitForCompletion(true);
+
+		Path input3 = new Path("/temp/part*");// id_utente country
+												// titolo_autore$titolo_canzone
+												// n_suonate
+		Path output2 = new Path("/out");
+
+		Job job2 = Job.getInstance(conf);
+		job2.setJarByClass(App.class);
+		FileInputFormat.setInputPaths(job2, input3);
+
+		job2.setInputFormatClass(TextInputFormat.class);
+		job2.setMapperClass(MapRound2.class);
+
+		FileOutputFormat.setOutputPath(job2, output2);
+		job2.setOutputKeyClass(Text.class);
+		job2.setOutputValueClass(Text.class);
+
+		job2.setReducerClass(ReducerRound2.class);
+		
+		job2.waitForCompletion(true);
 
 	}
 

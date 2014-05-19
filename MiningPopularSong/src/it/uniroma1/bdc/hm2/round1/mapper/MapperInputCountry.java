@@ -9,9 +9,6 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 public class MapperInputCountry extends Mapper<LongWritable, Text, Text, Text> {
 
-	// private final static IntWritable one = new IntWritable(1);
-	// private Text word = new Text();
-
 	@Override
 	protected void cleanup(Context context) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
