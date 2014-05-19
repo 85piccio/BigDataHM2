@@ -13,15 +13,13 @@ public class MapperInputTrack extends Mapper<LongWritable, Text, Text, Text> {
 	// private Text word = new Text();
 
 	@Override
-	protected void cleanup(Context context) throws IOException,
-			InterruptedException {
+	protected void cleanup(Context context) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		super.cleanup(context);
 	}
 
 	@Override
-	protected void map(LongWritable key, Text value, Context context)
-			throws IOException, InterruptedException {
+	protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
 		// TODO Auto-generated method stub
 		// super.map(key, value, context);
@@ -31,11 +29,8 @@ public class MapperInputTrack extends Mapper<LongWritable, Text, Text, Text> {
 
 		while (scanner.hasNext()) {
 			String[] parts = scanner.next().split("\t");
-			// if (parts.length == 5) {
-			if (!parts[2].isEmpty())
-				context.write(new Text(parts[0]/* UID */),
-						new Text(parts[2]/* idtrack */));/* emit */
-			// }s
+			if (!(parts[3].isEmpty() || parts[5].isEmpty()) )
+				context.write(new Text(parts[0]/* UID */), new Text(parts[3]+"$"+parts[5]/* idtrack */));/* emit */
 		}
 		scanner.close();
 	}
@@ -47,8 +42,7 @@ public class MapperInputTrack extends Mapper<LongWritable, Text, Text, Text> {
 	}
 
 	@Override
-	protected void setup(Context context) throws IOException,
-			InterruptedException {
+	protected void setup(Context context) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		super.setup(context);
 	}

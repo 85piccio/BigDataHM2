@@ -13,15 +13,13 @@ public class MapperInputCountry extends Mapper<LongWritable, Text, Text, Text> {
 	// private Text word = new Text();
 
 	@Override
-	protected void cleanup(Context context) throws IOException,
-			InterruptedException {
+	protected void cleanup(Context context) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		super.cleanup(context);
 	}
 
 	@Override
-	protected void map(LongWritable key, Text value, Context context)
-			throws IOException, InterruptedException {
+	protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
 		// TODO Auto-generated method stub
 		// super.map(key, value, context);
@@ -33,11 +31,8 @@ public class MapperInputCountry extends Mapper<LongWritable, Text, Text, Text> {
 			String[] parts = scanner.next().split("\t");
 
 			if (parts.length > 3) {
-				if (!parts[3].isEmpty()) {// ignore uid without
-											// country
-
-					context.write(new Text(parts[0]/* UID */), new Text("#"
-							+ parts[3]/* Country */));/* emit */
+				if (!parts[3].isEmpty()) {// ignore uid without country
+					context.write(new Text(parts[0]/* UID */), new Text("#" + parts[3]/* Country */));/* emit */
 				}
 			}
 		}
@@ -51,8 +46,7 @@ public class MapperInputCountry extends Mapper<LongWritable, Text, Text, Text> {
 	}
 
 	@Override
-	protected void setup(Context context) throws IOException,
-			InterruptedException {
+	protected void setup(Context context) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		super.setup(context);
 	}
