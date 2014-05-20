@@ -84,9 +84,8 @@ public class App {
 
 		// Formato file temp
 		// id_utente\tcountry\ttitolo_autore$titolo_canzone\tn_suonate
-	
-		
-		//Secondo round
+
+		// Secondo round
 		Path output2 = new Path("/out");
 
 		Job job2 = Job.getInstance(conf);
@@ -106,7 +105,8 @@ public class App {
 
 		// Delete temp file
 		FileSystem fs = FileSystem.get(conf);
-		fs.delete(new Path("/result_job1/"), true); // delete file, true for recursive
+		fs.delete(new Path("/result_job1/"), true); // delete file, true for
+													// recursive
 
 	}
 
