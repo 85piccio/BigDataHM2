@@ -7,6 +7,7 @@ import it.uniroma1.bdc.hm2.round2.mapper.MapRound2;
 import it.uniroma1.bdc.hm2.round2.reducer.ReducerRound2;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -98,6 +99,10 @@ public class App {
 		job2.setReducerClass(ReducerRound2.class);
 		
 		job2.waitForCompletion(true);
+		
+		//delate temp file
+		FileSystem fs = FileSystem.get(conf);
+		fs.delete(new Path("/temp/"), true); // delete file, true for recursive 
 
 	}
 

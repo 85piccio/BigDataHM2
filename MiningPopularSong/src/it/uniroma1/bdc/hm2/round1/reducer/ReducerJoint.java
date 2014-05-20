@@ -24,7 +24,7 @@ public class ReducerJoint extends Reducer<Text, Text, Text, Text> {
 		Map<String, Integer> songCount = new HashMap<>();
 		for (Text value : values) {
 			// value country TODO: PERFORMANCE
-			if (value.toString().startsWith("#")/* regex country */) {
+			if (value.toString().startsWith("$$")/* regex country */) {
 				if (isValidCountry(value.toString()))
 					country = value.toString();
 				else
