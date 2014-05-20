@@ -59,7 +59,7 @@ public class App {
 		Path input1 = new Path("/in/input1.txt");// country
 		Path input2 = new Path("/in/input2.txt");// truck
 
-		Path output1 = new Path("/temp");
+		Path output1 = new Path("/result_job1");
 
 		Job job1 = Job.getInstance(conf);
 		job1.setJarByClass(App.class);
@@ -80,9 +80,13 @@ public class App {
 
 		job1.waitForCompletion(true);
 
-		Path input3 = new Path("/temp/part*");// id_utente country
-												// titolo_autore$titolo_canzone
-												// n_suonate
+		Path input3 = new Path("/result_job1/part*");
+
+		// Formato file temp
+		// id_utente\tcountry\ttitolo_autore$titolo_canzone\tn_suonate
+	
+		
+		//Secondo round
 		Path output2 = new Path("/out");
 
 		Job job2 = Job.getInstance(conf);
@@ -97,12 +101,12 @@ public class App {
 		job2.setOutputValueClass(Text.class);
 
 		job2.setReducerClass(ReducerRound2.class);
-		
+
 		job2.waitForCompletion(true);
-		
-		//delate temp file
+
+		// Delete temp file
 		FileSystem fs = FileSystem.get(conf);
-		fs.delete(new Path("/temp/"), true); // delete file, true for recursive 
+		fs.delete(new Path("/result_job1/"), true); // delete file, true for recursive
 
 	}
 

@@ -18,6 +18,10 @@ public class ReducerJoint extends Reducer<Text, Text, Text, Text> {
 	}
 
 	@Override
+	
+	/*
+	 * Filtro country lo facciamo nel reduce per risparmiare di contare tutte le cazoni  
+	 */
 	protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		String country = "";
