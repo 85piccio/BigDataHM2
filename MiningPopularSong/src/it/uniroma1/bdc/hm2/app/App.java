@@ -105,8 +105,8 @@ public class App {
 
 		// Delete temp file
 		FileSystem fs = FileSystem.get(conf);
-		fs.delete(new Path("/result_job1/"), true); // delete file, true for
-													// recursive
+		// delete file, true for recursive
+		fs.delete(new Path("/result_job1/"), true); 
 
 	}
 

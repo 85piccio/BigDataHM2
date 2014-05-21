@@ -35,12 +35,14 @@ public class Song implements Comparable<Song> {
 	public static Comparator<Song> SongComparator = new Comparator<Song>() {
 
 		public int compare(Song s1, Song s2) {
-
-			// ascending order
 			return s1.compareTo(s2);
+		}
 
-			// descending order
-			// return fruitName2.compareTo(fruitName1);
+	};
+	public static Comparator<Song> ReverseSongComparator = new Comparator<Song>() {
+
+		public int compare(Song s1, Song s2) {
+			return -s1.compareTo(s2);
 		}
 
 	};

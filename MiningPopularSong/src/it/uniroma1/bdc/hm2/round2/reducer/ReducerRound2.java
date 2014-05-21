@@ -33,14 +33,14 @@ public class ReducerRound2 extends Reducer<Text, Text, Text, Text> {
 			if (!userCheck.containsKey(data[0])) {
 				userCheck.put(data[0], 1);
 				userCount++;
-			}
+			}// else --> gia contato
 
 			// conta totali canzoni
 			Integer incr = new Integer(data[2]);
 
 			if (totSong.containsKey(data[1]))
-				totSong.put(data[1], totSong.get(data[1]) + incr);// incr
-																	// counter
+				// incr counter
+				totSong.put(data[1], totSong.get(data[1]) + incr);
 			else
 				totSong.put(data[1], incr);// init counter
 
@@ -59,13 +59,11 @@ public class ReducerRound2 extends Reducer<Text, Text, Text, Text> {
 		Iterator<Entry<String, Integer>> iterator = totSong.entrySet().iterator();
 		// String s = "";
 		key = new Text(key.toString().substring(2));
-		// String sBest = "";
-		// Integer Best = 0;
 
 		// insert first song
 		Entry<String, Integer> firstSong = iterator.next();
-		
-		// inserisco  prima canzone è stata suonata TODO: necessario?  
+
+		// inserisco prima canzone è stata suonata TODO: necessario?
 		kbest.add(new Song(firstSong.getKey(), firstSong.getValue()));
 
 		while (iterator.hasNext()) {// for each track played in a country
@@ -84,9 +82,23 @@ public class ReducerRound2 extends Reducer<Text, Text, Text, Text> {
 			iterator.remove();
 		}
 
+		// //revert order
+		// ArrayList<Song> a = new ArrayList<>();
+		// a.addAll(kbest);
+		// Collections.reverse(a);
+
+		// for (Song s : a) {
+		// context.write(key, new Text(userCount + "\t" + s.getName() + "\t" +
+		// s.getnPlayed()));
+		// }
+		Queue<Song> reversekbest = new PriorityQueue<>(k, Song.ReverseSongComparator);
 		while (!kbest.isEmpty()) {
 			// Stampa kbest TODO:ordine inverso
-			Song best = kbest.poll();
+			reversekbest.add(kbest.poll());
+		}
+
+		while (!reversekbest.isEmpty()) {
+			Song best = reversekbest.poll();
 			context.write(key, new Text(userCount + "\t" + best.getName() + "\t" + best.getnPlayed()));
 		}
 
