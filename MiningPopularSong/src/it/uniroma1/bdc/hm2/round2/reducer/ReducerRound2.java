@@ -54,51 +54,41 @@ public class ReducerRound2 extends Reducer<Text, Text, Text, Text> {
 		 */
 
 		Integer k = 5;
-		Queue<Song> kbest = new PriorityQueue<>(k, Song.SongComparator);
+		Queue<Song> kbest = new PriorityQueue<>(k + 1, Song.SongComparator);
 
 		Iterator<Entry<String, Integer>> iterator = totSong.entrySet().iterator();
 		// String s = "";
 		key = new Text(key.toString().substring(2));
-//		String sBest = "";
-//		Integer Best = 0;
+		// String sBest = "";
+		// Integer Best = 0;
 
 		// insert first song
 		Entry<String, Integer> firstSong = iterator.next();
-		kbest.add(new Song(firstSong.getKey(),firstSong.getValue())); // inserisco n volte prima canzone è
-											// stata suonata
+		
+		// inserisco  prima canzone è stata suonata TODO: necessario?  
+		kbest.add(new Song(firstSong.getKey(), firstSong.getValue()));
 
 		while (iterator.hasNext()) {// for each track played in a country
 
 			Entry<String, Integer> song = iterator.next();
 
-			if (song.getValue() > (kbest.peek().getnPlayed())) {
-				// rimuovo ultimo elemento
+			if (kbest.size() < k) {
+				kbest.add(new Song(song.getKey(), song.getValue()));
+			} else if (song.getValue() > (kbest.peek().getnPlayed())) {
+				// rimuovo ultimo elemento (il minore della k-selezione)
+				kbest.remove();
 				// add best
-				kbest.add(new Song(firstSong.getKey(),firstSong.getValue()));
-				System.out.println(kbest.size()); //debug size of queue
-			}//Else --> scarto
+				kbest.add(new Song(song.getKey(), song.getValue()));
+			}// Else --> scarto
 
-
-			// if (Best < song.getValue()) {
-			// sBest = song.getKey() + "\t" + song.getValue();
-			// Best = song.getValue();
-			// }
-			// context.write(key, new Text(userCount + "\t" + song.getKey() +
-			// "\t" + song.getValue()));
 			iterator.remove();
 		}
-		while(!kbest.isEmpty()){
-			//Stampa kbest
-			Song best = (Song) kbest.peek(); 
+
+		while (!kbest.isEmpty()) {
+			// Stampa kbest TODO:ordine inverso
+			Song best = kbest.poll();
 			context.write(key, new Text(userCount + "\t" + best.getName() + "\t" + best.getnPlayed()));
-			kbest.remove();
 		}
-			
-//		context.write(key, new Text(userCount + "\t" + sBest));
-		// reset key ( -$$ from country )
-		// key = new Text(key.toString().substring(2));
-		// context.write(key, new Text(userCount.toString() + "\t" +
-		// totSong.size()));
 
 	}
 
