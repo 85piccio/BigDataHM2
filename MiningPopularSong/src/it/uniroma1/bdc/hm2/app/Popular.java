@@ -22,7 +22,7 @@ import org.apache.hadoop.util.ToolRunner;
 public class Popular extends Configured implements Tool {
 
 	static int printUsage() {
-		System.out.println("popular.jar /LFM/users /LFM/plays /LFM/pop k \"country1[|country2]\"");
+		System.out.println("\npopular.jar /LFM/users /LFM/plays /LFM/pop k \"country1[|country2]\"\n");
 		ToolRunner.printGenericCommandUsage(System.out);
 		return -1;
 	}
@@ -31,6 +31,11 @@ public class Popular extends Configured implements Tool {
 	public final static String COUNTRY = "COUNTRY";
 
 	public static void main(String[] args) throws Exception {
+		
+		//ck input args
+		if (args.length < 4) {
+			System.exit(printUsage());
+		}
 
 		Configuration conf = new Configuration();
 		conf.setInt("mapreduce.job.maps", 5);

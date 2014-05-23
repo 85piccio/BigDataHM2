@@ -50,10 +50,10 @@ public class ReducerRound2 extends Reducer<Text, Text, Text, Text> {
 		}
 
 		/*
-		 * Best k element tramite min-binary-heap con size = k min sempre in
-		 * radice -Se dim heap >= k - quando nextElem > root elimino root e
-		 * inserisco nextElem nel heap - quando nextElem < root non è un best k
-		 * --> scarto -altrimenti insert sempre
+		 * Best k element tramite min-binary-heap con size = k, Se dim heap >= k
+		 * - quando nextElem > root elimino root e inserisco nextElem nel heap -
+		 * - quando nextElem < root non è un best k --> scarto. Altrimenti
+		 * insert sempre
 		 */
 
 		// get k value
@@ -87,20 +87,23 @@ public class ReducerRound2 extends Reducer<Text, Text, Text, Text> {
 			iterator.remove();
 		}
 
+		//revert in descendig order 
 		Queue<Song> reversekbest = new PriorityQueue<>(k, Song.ReverseSongComparator);
 		while (!kbest.isEmpty()) {
-			// Stampa kbest 
 			reversekbest.add(kbest.poll());
 		}
 
+		
+		//Format final output 
 		String result = "";
-		result += "\nPopular songs in "+ key + "\t (based on " + userCount + " users)\n";
+		result += "\nPopular songs in " + key + "\t (based on " + userCount + " users)\n";
 		while (!reversekbest.isEmpty()) {
 			Song best = reversekbest.poll();
 			String[] sArr = best.getName().split("\\$");
 			if (sArr.length == 2)
 				result += "\tSong:\t" + sArr[1] + " by " + sArr[0] + ", " + best.getnPlayed() + " plays\n";
 		}
+		
 		context.write(new Text(""), new Text(result));
 
 	}
