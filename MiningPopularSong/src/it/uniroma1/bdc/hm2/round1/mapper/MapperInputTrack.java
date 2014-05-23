@@ -9,9 +9,6 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 public class MapperInputTrack extends Mapper<LongWritable, Text, Text, Text> {
 
-	// private final static IntWritable one = new IntWritable(1);
-	// private Text word = new Text();
-
 	@Override
 	protected void cleanup(Context context) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
@@ -20,9 +17,6 @@ public class MapperInputTrack extends Mapper<LongWritable, Text, Text, Text> {
 
 	@Override
 	protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-
-		// TODO Auto-generated method stub
-		// super.map(key, value, context);
 
 		Scanner scanner = new Scanner(value.toString());
 		scanner.useDelimiter("\n");

@@ -1,6 +1,6 @@
 package it.uniroma1.bdc.hm2.round1.reducer;
 
-import it.uniroma1.bdc.hm2.app.App;
+import it.uniroma1.bdc.hm2.app.Popular;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -25,11 +25,11 @@ public class ReducerJoint extends Reducer<Text, Text, Text, Text> {
 	 * cazoni
 	 */
 	protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
+
 		String country = "";
 		Map<String, Integer> songCount = new HashMap<>();
 
-		String[] validCountry = context.getConfiguration().getStrings(App.COUNTRY);
+		String[] validCountry = context.getConfiguration().getStrings(Popular.COUNTRY);
 
 		for (Text value : values) {
 			// value country TODO: PERFORMANCE
@@ -38,7 +38,6 @@ public class ReducerJoint extends Reducer<Text, Text, Text, Text> {
 				if (validCountry[0].contains(value.toString().substring(2)))
 					country = value.toString();
 				else {
-					System.out.println("early exit");
 					return; // early exit if not a valid country **no emit**
 				}
 			} else {// Value = id track
@@ -52,14 +51,13 @@ public class ReducerJoint extends Reducer<Text, Text, Text, Text> {
 		// fix no country set
 		if (country.compareTo("") != 0 && songCount.size() > 0) {
 			Iterator<Entry<String, Integer>> iterator = songCount.entrySet().iterator();
-			// String s = "";
+			
 			while (iterator.hasNext()) {// for each track played
 				Entry<String, Integer> song = iterator.next();
-				// s += song.getKey() + "\t" + song.getValue() + "\t";
 				context.write(key, new Text(country + "\t" + song.getKey() + "\t" + song.getValue()));
 				iterator.remove();
 			}
-			// context.write(key, new Text(country + "\t" + s));
+			
 		}
 
 	}

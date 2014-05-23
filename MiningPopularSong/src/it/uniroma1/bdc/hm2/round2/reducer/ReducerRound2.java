@@ -1,6 +1,6 @@
 package it.uniroma1.bdc.hm2.round2.reducer;
 
-import it.uniroma1.bdc.hm2.app.App;
+import it.uniroma1.bdc.hm2.app.Popular;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ public class ReducerRound2 extends Reducer<Text, Text, Text, Text> {
 	@Override
 	protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		
+
 		Integer userCount = 0;
 		Map<String, Integer> userCheck = new HashMap<>();
 		Map<String, Integer> totSong = new HashMap<>();
@@ -56,9 +56,9 @@ public class ReducerRound2 extends Reducer<Text, Text, Text, Text> {
 		 * --> scarto -altrimenti insert sempre
 		 */
 
-		//get k value
-		Integer k = context.getConfiguration().getInt(App.KBEST, 3);
-		
+		// get k value
+		Integer k = context.getConfiguration().getInt(Popular.KBEST, 3);
+
 		Queue<Song> kbest = new PriorityQueue<>(k + 1, Song.SongComparator);
 
 		Iterator<Entry<String, Integer>> iterator = totSong.entrySet().iterator();
@@ -89,14 +89,19 @@ public class ReducerRound2 extends Reducer<Text, Text, Text, Text> {
 
 		Queue<Song> reversekbest = new PriorityQueue<>(k, Song.ReverseSongComparator);
 		while (!kbest.isEmpty()) {
-			// Stampa kbest TODO:ordine inverso
+			// Stampa kbest 
 			reversekbest.add(kbest.poll());
 		}
 
+		String result = "";
+		result += "\nPopular songs in "+ key + "\t (based on " + userCount + " users)\n";
 		while (!reversekbest.isEmpty()) {
 			Song best = reversekbest.poll();
-			context.write(key, new Text(userCount + "\t" + best.getName() + "\t" + best.getnPlayed()));
+			String[] sArr = best.getName().split("\\$");
+			if (sArr.length == 2)
+				result += "\tSong:\t" + sArr[1] + " by " + sArr[0] + ", " + best.getnPlayed() + " playse\n";
 		}
+		context.write(new Text(""), new Text(result));
 
 	}
 
