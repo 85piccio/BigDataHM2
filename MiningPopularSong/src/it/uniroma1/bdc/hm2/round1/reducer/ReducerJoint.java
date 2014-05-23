@@ -1,5 +1,7 @@
 package it.uniroma1.bdc.hm2.round1.reducer;
 
+import it.uniroma1.bdc.hm2.app.App;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,13 +28,19 @@ public class ReducerJoint extends Reducer<Text, Text, Text, Text> {
 		// TODO Auto-generated method stub
 		String country = "";
 		Map<String, Integer> songCount = new HashMap<>();
+
+		String[] validCountry = context.getConfiguration().getStrings(App.COUNTRY);
+
 		for (Text value : values) {
 			// value country TODO: PERFORMANCE
 			if (value.toString().startsWith("$$")/* regex country */) {
-				if (isValidCountry(value.toString()))
+				// if country is in input list
+				if (validCountry[0].contains(value.toString().substring(2)))
 					country = value.toString();
-				else
-					return; // early exit if not a input country
+				else {
+					System.out.println("early exit");
+					return; // early exit if not a valid country **no emit**
+				}
 			} else {// Value = id track
 				if (songCount.containsKey(value.toString())) {
 					songCount.put(value.toString(), songCount.get(value.toString()) + 1);
@@ -66,10 +74,5 @@ public class ReducerJoint extends Reducer<Text, Text, Text, Text> {
 	protected void setup(Context context) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		super.setup(context);
-	}
-
-	private boolean isValidCountry(String string) {
-		// TODO Check is one of input country
-		return true;
 	}
 }

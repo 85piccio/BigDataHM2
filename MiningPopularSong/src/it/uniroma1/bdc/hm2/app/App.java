@@ -25,6 +25,9 @@ public class App {
 		return -1;
 	}
 
+	public final static String KBEST = "KBEST";
+	public final static String COUNTRY = "COUNTRY";
+
 	public static void main(String[] args) throws Exception {
 
 		// List<String> otherArgs = new ArrayList<String>();
@@ -56,9 +59,13 @@ public class App {
 		// System.exit(printUsage());
 		// }
 
-		Path input1 = new Path("/in/input1.txt");// country
-		Path input2 = new Path("/in/input2.txt");// truck
+		Path input1 = new Path(args[0]);// User
+		Path input2 = new Path(args[1]);// Play
+		conf.setInt(KBEST, new Integer (args[2]));//kbest
+		conf.setStrings(COUNTRY, args[3]);
 
+		System.out.println(args[3].split("\\|").length);
+		
 		Path output1 = new Path("/result_job1");
 
 		Job job1 = Job.getInstance(conf);
@@ -86,7 +93,7 @@ public class App {
 		// id_utente\tcountry\ttitolo_autore$titolo_canzone\tn_suonate
 
 		// Secondo round
-		Path output2 = new Path("/out");
+		Path output2 = new Path("/pop");
 
 		Job job2 = Job.getInstance(conf);
 		job2.setJarByClass(App.class);

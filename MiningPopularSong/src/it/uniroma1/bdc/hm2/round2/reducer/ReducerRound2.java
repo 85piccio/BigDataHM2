@@ -1,5 +1,7 @@
 package it.uniroma1.bdc.hm2.round2.reducer;
 
+import it.uniroma1.bdc.hm2.app.App;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,6 +24,7 @@ public class ReducerRound2 extends Reducer<Text, Text, Text, Text> {
 	@Override
 	protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
+		
 		Integer userCount = 0;
 		Map<String, Integer> userCheck = new HashMap<>();
 		Map<String, Integer> totSong = new HashMap<>();
@@ -53,7 +56,9 @@ public class ReducerRound2 extends Reducer<Text, Text, Text, Text> {
 		 * --> scarto -altrimenti insert sempre
 		 */
 
-		Integer k = 5;
+		//get k value
+		Integer k = context.getConfiguration().getInt(App.KBEST, 3);
+		
 		Queue<Song> kbest = new PriorityQueue<>(k + 1, Song.SongComparator);
 
 		Iterator<Entry<String, Integer>> iterator = totSong.entrySet().iterator();
@@ -82,15 +87,6 @@ public class ReducerRound2 extends Reducer<Text, Text, Text, Text> {
 			iterator.remove();
 		}
 
-		// //revert order
-		// ArrayList<Song> a = new ArrayList<>();
-		// a.addAll(kbest);
-		// Collections.reverse(a);
-
-		// for (Song s : a) {
-		// context.write(key, new Text(userCount + "\t" + s.getName() + "\t" +
-		// s.getnPlayed()));
-		// }
 		Queue<Song> reversekbest = new PriorityQueue<>(k, Song.ReverseSongComparator);
 		while (!kbest.isEmpty()) {
 			// Stampa kbest TODO:ordine inverso

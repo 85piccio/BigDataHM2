@@ -39,6 +39,8 @@ public class Song implements Comparable<Song> {
 		}
 
 	};
+	
+	//comparator for reversing	
 	public static Comparator<Song> ReverseSongComparator = new Comparator<Song>() {
 
 		public int compare(Song s1, Song s2) {
