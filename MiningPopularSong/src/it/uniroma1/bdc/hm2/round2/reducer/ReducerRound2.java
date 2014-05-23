@@ -99,7 +99,7 @@ public class ReducerRound2 extends Reducer<Text, Text, Text, Text> {
 			Song best = reversekbest.poll();
 			String[] sArr = best.getName().split("\\$");
 			if (sArr.length == 2)
-				result += "\tSong:\t" + sArr[1] + " by " + sArr[0] + ", " + best.getnPlayed() + " playse\n";
+				result += "\tSong:\t" + sArr[1] + " by " + sArr[0] + ", " + best.getnPlayed() + " plays\n";
 		}
 		context.write(new Text(""), new Text(result));
 
