@@ -20,10 +20,9 @@ public class MapperInputTrack extends Mapper<LongWritable, Text, Text, Text> {
 
 		Scanner scanner = new Scanner(value.toString());
 		scanner.useDelimiter("\n");
-
 		while (scanner.hasNext()) {
 			String[] parts = scanner.next().split("\t");
-			if (!(parts[3].isEmpty() || parts[5].isEmpty()))
+			if (parts.length > 5)
 				context.write(new Text(parts[0]/* UID */), new Text(parts[3] + "$" + parts[5]/* idtrack */));/* emit */
 		}
 		scanner.close();

@@ -22,7 +22,7 @@ import org.apache.hadoop.util.ToolRunner;
 public class Popular extends Configured implements Tool {
 
 	static int printUsage() {
-		System.out.println("\npopular.jar /LFM/users /LFM/plays /LFM/pop k \"country1[|country2]\"\n");
+		System.out.println("\noptions: \npopular.jar /LFM/users /LFM/plays /LFM/pop k \"country1[|country2]\"\n");
 		ToolRunner.printGenericCommandUsage(System.out);
 		return -1;
 	}
