@@ -2,7 +2,7 @@ package it.uniroma1.bdc.hm2.app;
 
 import it.uniroma1.bdc.hm2.round1.mapper.MapperInputCountry;
 import it.uniroma1.bdc.hm2.round1.mapper.MapperInputTrack;
-import it.uniroma1.bdc.hm2.round1.reducer.ReducerJoint;
+import it.uniroma1.bdc.hm2.round1.reducer.ReducerJoin;
 import it.uniroma1.bdc.hm2.round2.mapper.MapRound2;
 import it.uniroma1.bdc.hm2.round2.reducer.ReducerRound2;
 
@@ -38,8 +38,8 @@ public class Popular extends Configured implements Tool {
 		}
 
 		Configuration conf = new Configuration();
+		
 		conf.setInt("mapreduce.job.maps", 5);
-
 		conf.setInt("mapreduce.job.reduces", 5);
 		
 		Popular pop = new Popular();
@@ -73,7 +73,7 @@ public class Popular extends Configured implements Tool {
 		job1.setOutputValueClass(Text.class);
 
 		// job.setCombinerClass(MyReducer.class);
-		job1.setReducerClass(ReducerJoint.class);
+		job1.setReducerClass(ReducerJoin.class);
 
 		job1.waitForCompletion(true);
 
@@ -84,6 +84,12 @@ public class Popular extends Configured implements Tool {
 
 		// Second round
 		Path output2 = new Path("/pop");
+		
+
+//		//Change # reduce --> one per country
+//		int nRed = args[3].split("\\|").length;
+//		conf.setInt("mapreduce.job.reduces", nRed);
+//		conf.setInt("mapred.reduce.tasks", nRed);
 
 		Job job2 = Job.getInstance(conf);
 		job2.setJarByClass(Popular.class);

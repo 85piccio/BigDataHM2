@@ -30,7 +30,8 @@ public class MapperInputCountry extends Mapper<LongWritable, Text, Text, Text> {
 			if (parts.length > 3) {
 				if (!parts[3].isEmpty()) {// ignore uid without country
 					context.write(new Text(parts[0]/* UID */), new Text("$$" + parts[3]/* Country */));/* emit */
-				}
+				}else
+					context.write(new Text(parts[0]/* UID */), new Text("$$EMPTY"));/* emit */
 			}
 		}
 		scanner.close();

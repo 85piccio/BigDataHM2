@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-public class ReducerJoint extends Reducer<Text, Text, Text, Text> {
+public class ReducerJoin extends Reducer<Text, Text, Text, Text> {
 
 	@Override
 	protected void cleanup(Context context) throws IOException, InterruptedException {

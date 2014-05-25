@@ -4,11 +4,13 @@ import it.uniroma1.bdc.hm2.app.Popular;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Set;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -26,15 +28,13 @@ public class ReducerRound2 extends Reducer<Text, Text, Text, Text> {
 		// TODO Auto-generated method stub
 
 		Integer userCount = 0;
-		Map<String, Integer> userCheck = new HashMap<>();
+		Set<String> userCheck = new HashSet<>();
 		Map<String, Integer> totSong = new HashMap<>();
 
 		for (Text value : values) {
 			String data[] = value.toString().split("\t");
-
 			// conta utenti
-			if (!userCheck.containsKey(data[0])) {
-				userCheck.put(data[0], 1);
+			if (userCheck.add(data[0])) {
 				userCount++;
 			}// else --> gia contato
 
