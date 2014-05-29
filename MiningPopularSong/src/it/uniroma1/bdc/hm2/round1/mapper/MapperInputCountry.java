@@ -28,9 +28,9 @@ public class MapperInputCountry extends Mapper<LongWritable, Text, Text, Text> {
 			String[] parts = scanner.next().split("\t");
 
 			if (parts.length > 3) {
-				if (!parts[3].isEmpty()) {// ignore uid without country
+				if (!parts[3].isEmpty()) {
 					context.write(new Text(parts[0]/* UID */), new Text("$$" + parts[3]/* Country */));/* emit */
-				}else
+				}else//add token sentinella se country no definita
 					context.write(new Text(parts[0]/* UID */), new Text("$$EMPTY"));/* emit */
 			}
 		}

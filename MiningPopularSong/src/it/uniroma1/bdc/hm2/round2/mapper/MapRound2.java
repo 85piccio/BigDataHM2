@@ -23,7 +23,7 @@ public class MapRound2 extends Mapper<LongWritable, Text, Text, Text> {
 
 		while (scanner.hasNext()) {
 			String[] parts = scanner.next().split("\t");
-			// PASS FORMAT -> "uid\tsong\tn_play"
+			// PASS FORMAT -> "uid \t artist$song \t n_play"
 			Text pass = new Text(parts[0] + "\t" + parts[2] + "\t" + parts[3]);
 			
 			context.write(new Text(parts[1]/* country */), pass);/* emit */

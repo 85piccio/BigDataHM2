@@ -23,7 +23,7 @@ public class MapperInputTrack extends Mapper<LongWritable, Text, Text, Text> {
 		while (scanner.hasNext()) {
 			String[] parts = scanner.next().split("\t");
 			if (parts.length > 5)
-				context.write(new Text(parts[0]/* UID */), new Text(parts[3] + "$" + parts[5]/* idtrack */));/* emit */
+				context.write(new Text(parts[0]/* UID */), new Text(parts[3] /*artist name*/ + "$" + parts[5]/* track name */));/* emit */
 		}
 		scanner.close();
 	}

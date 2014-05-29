@@ -42,8 +42,7 @@ public class ReducerRound2 extends Reducer<Text, Text, Text, Text> {
 			Integer incr = new Integer(data[2]);
 
 			if (totSong.containsKey(data[1]))
-				// incr counter
-				totSong.put(data[1], totSong.get(data[1]) + incr);
+				totSong.put(data[1], totSong.get(data[1]) + incr);//incr counter con somme parziali
 			else
 				totSong.put(data[1], incr);// init counter
 
@@ -77,12 +76,12 @@ public class ReducerRound2 extends Reducer<Text, Text, Text, Text> {
 
 			if (kbest.size() < k) {
 				kbest.add(new Song(song.getKey(), song.getValue()));
-			} else if (song.getValue() > (kbest.peek().getnPlayed())) {
+			} else if (song.getValue() > (kbest.peek().getnPlayed())) { //next > radice
 				// rimuovo ultimo elemento (il minore della k-selezione)
 				kbest.remove();
 				// add best
 				kbest.add(new Song(song.getKey(), song.getValue()));
-			}// Else --> scarto
+			}// Else --> scarto -- next < radice
 
 			iterator.remove();
 		}

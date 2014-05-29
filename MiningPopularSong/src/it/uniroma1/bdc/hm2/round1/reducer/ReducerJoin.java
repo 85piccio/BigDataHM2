@@ -32,17 +32,16 @@ public class ReducerJoin extends Reducer<Text, Text, Text, Text> {
 		String[] validCountry = context.getConfiguration().getStrings(Popular.COUNTRY);
 
 		for (Text value : values) {
-			// value country TODO: PERFORMANCE
-			if (value.toString().startsWith("$$")/* regex country */) {
+			if (value.toString().startsWith("$$")) {//value = country
 				// if country is in input list
 				if (validCountry[0].contains(value.toString().substring(2)))
 					country = value.toString();
 				else {
 					return; // "early exit" if not a valid country **no emit**
 				}
-			} else {// Value = id track
+			} else {// Value = artist_name$track_name
 				if (songCount.containsKey(value.toString())) {
-					songCount.put(value.toString(), songCount.get(value.toString()) + 1);
+					songCount.put(value.toString(), songCount.get(value.toString()) + 1);//incr ascolti
 				} else {
 					songCount.put(value.toString(), 1);
 				}
