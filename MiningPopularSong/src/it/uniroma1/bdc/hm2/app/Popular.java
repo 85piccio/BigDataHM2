@@ -39,8 +39,10 @@ public class Popular extends Configured implements Tool {
 
 		Configuration conf = new Configuration();
 		
-		conf.setInt("mapreduce.job.maps", 5);
-		conf.setInt("mapreduce.job.reduces", 5);
+		
+		//Valori di default
+		conf.setInt("mapreduce.job.maps", 8);
+		conf.setInt("mapreduce.job.reduces", 8);
 		
 		Popular pop = new Popular();
 		pop.setConf(conf);
@@ -85,12 +87,6 @@ public class Popular extends Configured implements Tool {
 		// Second round
 		Path output2 = new Path("/pop");
 		
-
-//		//Change # reduce --> one per country
-//		int nRed = args[3].split("\\|").length;
-//		conf.setInt("mapreduce.job.reduces", nRed);
-//		conf.setInt("mapred.reduce.tasks", nRed);
-
 		Job job2 = Job.getInstance(conf);
 		job2.setJarByClass(Popular.class);
 		FileInputFormat.setInputPaths(job2, input3);

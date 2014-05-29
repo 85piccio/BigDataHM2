@@ -38,7 +38,7 @@ public class ReducerJoin extends Reducer<Text, Text, Text, Text> {
 				if (validCountry[0].contains(value.toString().substring(2)))
 					country = value.toString();
 				else {
-					return; // early exit if not a valid country **no emit**
+					return; // "early exit" if not a valid country **no emit**
 				}
 			} else {// Value = id track
 				if (songCount.containsKey(value.toString())) {
